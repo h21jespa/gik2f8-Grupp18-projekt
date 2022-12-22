@@ -105,6 +105,11 @@ function renderList() {
     
   });
 }
+function sortList(task) {
+  var taskItem = document.getElementById(`task-${task.id}`);
+  
+
+}
 
 function renderTask(task) {
   const JSONData = JSON.stringify(task);
@@ -164,6 +169,7 @@ function updateTask(data) {
   });
 
 }
+
 /***********************Labb 2 ***********************/
 /* Här skulle det vara lämpligt att skriva den funktion som angivits som eventlyssnare för när någon markerar en uppgift som färdig. Jag pratar alltså om den eventlyssnare som angavs i templatesträngen i renderTask. Det kan t.ex. heta updateTask. 
   
