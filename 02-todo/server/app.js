@@ -113,28 +113,25 @@ app.delete('/tasks/:id', async (req, res) => {
   }
 });
 
-app.patch('/tasks', async (req, res) => {
-  console.log(req);
-  try {
-    const id = req.params.id;
-    console.log(req.params)
+app.patch('/tasks/:task', async (req, res) => {
+ try {
+    const task = JSON.parse(req.params.task);
     const listBuffer = await fs.readFile('./tasks.json');
-    console.log(listBuffer)
-    /*const listBuffer = req.params;*/
-    const currentTasks = JSON.parse(listBuffer);
-    if (currentTasks.length > 0) {
-      await fs.writeFile(
-        './tasks.json',
-        JSON.stringify(currentTasks.filter((task) => task.id != id))
-      );
-      res.send({ message: `Uppgift med id ${id} uppdaterades` });
-    } else {
-      res.status(404).send({ error: 'Ingen uppgift att uppdatera' });
-    }
-  } catch (error) {
+    const tasks = JSON.parse(listBuffer);
+
+    tasks.forEach(element => {
+      if(element.id === task.id){
+        element.completed = task.completed 
+      }  
+    });
+    
+    await fs.writeFile('./tasks.json', JSON.stringify(tasks));
+      
+  }   
+  catch (error) {
+    /* Vid fel skickas istället statuskod 500 och information om felet.  */
     res.status(500).send({ error: error.stack });
   }
-  res.send(newTask);
 });
 
 /***********************Labb 2 ***********************/

@@ -94,18 +94,20 @@ class Api {
       }
     });
 
-    return (
-      fetch(request)
+   /*  return (
+     fetch(request)
         .then((result) => result.json())
         .then((data) => data)
         .catch((err) => console.log(err))
-    );
-   /* return fetch(`${this.url},${options}`, {
-      method: 'PATCH'
-
+    );*/
+    return fetch(`${this.url}/${JSONData}`, {
+      method: 'PATCH',
+      headers: {
+        'content-type': 'application/json'
+      }
     })
       .then((result) => result)
-      .catch((err) => console.log(err));*/
+      .catch((err) => console.log(err));
   }
   /***********************Labb 2 ***********************/
   /* Här skulle det vara lämpligt att skriva en metod likt getAll,                        fetch(url, {options}) 

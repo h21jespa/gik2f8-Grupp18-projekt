@@ -92,8 +92,17 @@ function renderList() {
     if (tasks && tasks.length > 0) {
       tasks.forEach((task) => {
         todoListElement.insertAdjacentHTML("beforeend", renderTask(task));
+        var taskItem = document.getElementById(`task-${task.id}`);
+        var checkbox = document.getElementById(`checkbox-${task.id}`);
+        if (task.completed) {
+          taskItem.style.backgroundColor = "Green";
+        } else {
+          taskItem.style.backgroundColor = "Inherit";
+        }
+        checkbox.checked = task.completed
       });
     }
+    
   });
 }
 
@@ -114,7 +123,7 @@ function renderTask(task) {
     (html += `
       <p class="ml-8 mt-2 text-xs italic ">${task.description}</p>
       <div class="flex items-center pl-4">
-    <input id=checkbox" onclick='checkboxstate(this,${JSONData})' type="checkbox" value="" name="bordered-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+    <input id="checkbox-${task.id}" onclick='checkboxstate(this,${JSONData})' type="checkbox" value="" name="bordered-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
     <label for="-checkbox" class="py-4 ml-2 w-full text-1 font-bold text-pink-800 italic ">Utförd</label>
     </div>
     
@@ -151,8 +160,9 @@ function deleteTask(id) {
 
 function updateTask(data) {
   api.update(data).then((result) => {
-    /*renderList();*/
+
   });
+
 }
 /***********************Labb 2 ***********************/
 /* Här skulle det vara lämpligt att skriva den funktion som angivits som eventlyssnare för när någon markerar en uppgift som färdig. Jag pratar alltså om den eventlyssnare som angavs i templatesträngen i renderTask. Det kan t.ex. heta updateTask. 
