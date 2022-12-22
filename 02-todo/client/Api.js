@@ -94,12 +94,6 @@ class Api {
       }
     });
 
-   /*  return (
-     fetch(request)
-        .then((result) => result.json())
-        .then((data) => data)
-        .catch((err) => console.log(err))
-    );*/
     return fetch(`${this.url}/${JSONData}`, {
       method: 'PATCH',
       headers: {
