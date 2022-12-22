@@ -99,16 +99,10 @@ function renderList() {
         } else {
           taskItem.style.backgroundColor = "Inherit";
         }
-        checkbox.checked = task.completed
+        checkbox.checked = task.completed;
       });
     }
-    
   });
-}
-function sortList(task) {
-  var taskItem = document.getElementById(`task-${task.id}`);
-  
-
 }
 
 function renderTask(task) {
@@ -164,10 +158,7 @@ function deleteTask(id) {
 }
 
 function updateTask(data) {
-  api.update(data).then((result) => {
-
-  });
-
+  api.update(data).then((result) => {});
 }
 
 /***********************Labb 2 ***********************/
