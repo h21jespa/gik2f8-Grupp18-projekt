@@ -69,9 +69,17 @@ app.post('/tasks', async (req, res) => {
     const newTask = { id: maxTaskId + 1, ...task };
     /* Om currentTasks finns - dvs det finns tidigare lagrade uppgifter,  skapas en ny array innehållande tidigare uppgifter (varje befintlig uppgift i currentTasks läggs till i den nya arrayen med hjälp av spreadoperatorn) plus den nya uppgiften. Om det inte tidigare finns några uppgifter, skapas istället en ny array med endast den nya uppgiften.  */
     const newList = currentTasks ? [...currentTasks, newTask] : [newTask];
+    
+    newList.sort(function(a,b){
 
-    /* Den nya listan görs om till en textsträng med hjälp av JSON.stringify och sparas ner till filen tasks.json med hjälp av fs-modulens writeFile-metod. Anropet är asynkront så await används för att invänta svaret innan koden går vidare. */
+      return new Date(b.dueDate) - new Date(a.dueDate);
+      
+      });
+      newList.reverse();
+
+
     await fs.writeFile('./tasks.json', JSON.stringify(newList));
+
     /* Det är vanligt att man vid skapande av någon ny resurs returnerar tillbaka den nya sak som skapades. Så den nya uppgiften skickas med som ett success-response. */
     res.send(newTask);
   } catch (error) {
@@ -80,6 +88,10 @@ app.post('/tasks', async (req, res) => {
   }
 });
 /* Express metod för att lyssna efter DELETE-anrop heter naturligt delete(). I övrigt fungerar den likadant som get och post */
+
+
+
+
 
 /* Route-adressen som specificeras i delete har /:id i tillägg till adressen. Det betyder att man i adressen kan skriva task följt av ett / och sedan något som kommer att sparas i en egenskap vid namn id. :id betyder att det som står efter / kommer att heta id i requestobjektet. Hade kunnat vara vad som helst. Så här möjliggörs att lyssna efter DELETE-anrop på exempelvis url:en localhost:5000/task/1 där 1 då skulle motsvara ett id på den uppgift man vill ta bort */
 app.delete('/tasks/:id', async (req, res) => {
