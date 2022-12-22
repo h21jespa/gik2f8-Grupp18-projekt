@@ -1,4 +1,3 @@
-
 todoForm.title.addEventListener("keyup", (e) => validateField(e.target));
 todoForm.title.addEventListener("blur", (e) => validateField(e.target));
 todoForm.description.addEventListener("input", (e) => validateField(e.target));
@@ -98,23 +97,24 @@ function renderList() {
   });
 }
 
-function renderTask({ id, title, description, dueDate }) {
+function renderTask(task) {
+  const JSONData = JSON.stringify(task);
   let html = `
-    <li id="task-${id}" class="select-none mt-2 py-2 border-b border-amber-300">
+    <li id="task-${task.id}" class="select-none mt-2 py-2 border-b border-amber-300">
       <div class="flex items-center">
-        <h3 class="mb-3 flex-1 text-xl font-bold text-pink-800 uppercase">${title}</h3>
+        <h3 class="mb-3 flex-1 text-xl font-bold text-pink-800 uppercase">${task.title}</h3>
         <div>
-          <span>${dueDate}</span>
-          <button onclick="deleteTask(${id})" class="inline-block bg-amber-500 text-xs text-amber-900 border border-white px-3 py-1 rounded-md ml-2">Ta bort</button>
+          <span>${task.dueDate}</span>
+          <button onclick="deleteTask(${task.id})" class="inline-block bg-amber-500 text-xs text-amber-900 border border-white px-3 py-1 rounded-md ml-2">Ta bort</button>
         </div>
       </div>`;
 
   /**/
   description &&
     (html += `
-      <p class="ml-8 mt-2 text-xs italic ">${description}</p>
+      <p class="ml-8 mt-2 text-xs italic ">${task.description}</p>
       <div class="flex items-center pl-4">
-    <input id=checkbox" onclick="checkboxstate(this,${id})" type="checkbox" value="" name="bordered-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+    <input id=checkbox" onclick='checkboxstate(this,${JSONData})' type="checkbox" value="" name="bordered-checkbox" class="w-4 h-4 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
     <label for="-checkbox" class="py-4 ml-2 w-full text-1 font-bold text-pink-800 italic ">Utförd</label>
     </div>
     
@@ -132,13 +132,15 @@ function renderTask({ id, title, description, dueDate }) {
   return html;
 }
 
-function checkboxstate(checkbox, id) {
-  var taskItem = document.getElementById(`task-${id}`);
+function checkboxstate(checkbox, task) {
+  var taskItem = document.getElementById(`task-${task.id}`);
   if (checkbox.checked) {
     taskItem.style.backgroundColor = "Green";
   } else {
     taskItem.style.backgroundColor = "Inherit";
   }
+  task.completed = checkbox.checked;
+  updateTask(task);
 }
 
 function deleteTask(id) {
@@ -147,20 +149,30 @@ function deleteTask(id) {
   });
 }
 
+function updateTask(data) {
+  api.update(data).then((result) => {
+    /*renderList();*/
+  });
+}
 /***********************Labb 2 ***********************/
 /* Här skulle det vara lämpligt att skriva den funktion som angivits som eventlyssnare för när någon markerar en uppgift som färdig. Jag pratar alltså om den eventlyssnare som angavs i templatesträngen i renderTask. Det kan t.ex. heta updateTask. 
   
 Funktionen bör ta emot ett id som skickas från <li>-elementet.
 */
 
-/* Inuti funktionen kan ett objekt skickas till api-metoden update. Objektet ska som minst innehålla id på den uppgift som ska förändras, samt egenskapen completed som true eller false, beroende på om uppgiften markerades som färdig eller ofärdig i gränssnittet. 
+/* Inuti funktionen kan ett objekt skickas till api-metoden update. Objektet ska som minst 
+innehålla id på den uppgift som ska förändras, samt egenskapen completed som true eller false, 
+beroende på om uppgiften markerades som färdig eller ofärdig i gränssnittet. 
 Det finns några sätt att utforma det som ska skickas till api.update-metoden. 
-Alternativ 1: objektet består av ett helt task-objekt, som också inkluderar förändringen. Exempel: {id: 1,  title: "x", description: "x", dueDate: "x", completed: true/false}
+Alternativ 1: objektet består av ett helt task-objekt, som också inkluderar förändringen. 
+Exempel: {id: 1,  title: "x", description: "x", dueDate: "x", completed: true/false}
 Alternativ 2: objektet består bara av förändringarna och id på den uppgift som ska förändras. Exempel: {id: 1, completed: true/false } 
 Om du hittar något annat sätt som funkar för dig, använd för all del det, så länge det uppnår samma sak. :)
 */
 
-/* Anropet till api.update ska följas av then(). then() behöver, som bör vara bekant vid det här laget, en callbackfunktion som ska hantera det som kommer tillbaka från servern via vår api-klass. Inuti den funktionen bör listan med uppgifter renderas på nytt, så att den nyligen gjorda förändringen syns. */
+/* Anropet till api.update ska följas av then(). then() behöver, som bör vara bekant vid det här laget, 
+en callbackfunktion som ska hantera det som kommer tillbaka från servern via vår api-klass. 
+Inuti den funktionen bör listan med uppgifter renderas på nytt, så att den nyligen gjorda förändringen syns. */
 
 /***********************Labb 2 ***********************/
 
